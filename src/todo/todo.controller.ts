@@ -1,13 +1,20 @@
-import { Controller, Delete, Get, Post, Put } from '@nestjs/common';
-import { GraphInspector } from '@nestjs/core';
+import { Controller, Delete, Get, Post, Put, Req, Res } from '@nestjs/common';
+import { Request, Response } from 'express';
+
 
 @Controller('todo')
 export class TodoController {
 
     @Get()
-    getTodos(){
-        console.log("Récupérer la liste des todos");
-        return 'Liste des Todos'
+    getTodos(
+        @Req() request : Request,
+        @Res() response : Response
+    ){
+        console.log(request)
+        response.status(200);
+        response.json({
+            "content" : "hello world"
+        });
     }
 
     @Post()
