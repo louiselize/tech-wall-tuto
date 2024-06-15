@@ -60,9 +60,14 @@ export class TodoController {
         }
     }
 
-    @Put()
-    updateTodo(){
-        console.log("Modifier un todo la liste des todos");
-        return 'Update Todo'
+    @Put(':id')
+    updateTodo(
+        @Param('id') id,
+        @Body() newTodo: Partial<Todo> // only a part of a todo
+    ){
+        const todo = this.getTodoById(id)
+        todo.description = newTodo.description? newTodo.description : todo.description
+        todo.name = newTodo.name? newTodo.name : todo.name
+        return todo
     }
 }
