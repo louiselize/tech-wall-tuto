@@ -15,7 +15,6 @@ export class TodoController {
         return this.todos
     }
 
-     // ':' argument
     @Get('/:id')
     getTodoById(
         @Param('id') id
@@ -40,10 +39,25 @@ export class TodoController {
         return newTodo
     }
 
-    @Delete()
-    deleteTodo(){
-        console.log("Supprimer un todo de la liste des todos");
-        return 'Delete Todo'
+    @Delete(':id') // ':' : get a parameter
+    deleteTodo(
+        @Param('id') id
+    ){
+        //Find todos inside todos array
+        // '===' type taken into consideration
+        // '+' transform str into int
+        const index = this.todos.findIndex((todo) => todo.id === +id);
+
+        //delete and return error if does not exist
+        if (index >= 0){
+            this.todos.splice(index, 1);
+        } else {
+            throw new NotFoundException(`Todo with id ${id} does not exist`)
+        }
+        return {
+            message : `Todo with id ${id} has been succesfully deleted`,
+            count: 1,
+        }
     }
 
     @Put()
