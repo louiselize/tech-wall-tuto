@@ -1,5 +1,7 @@
-import { Body, Controller, Delete, Get, NotFoundException, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, NotFoundException, Param, Post, Put, Query } from '@nestjs/common';
 import { Todo } from './entities/todo.entity';
+import { GetPaginatedTodoDto } from './DTO/get-paginated-todo.dto';
+import { AddTodoDto } from './DTO/add-todo.dto';
 
 
 @Controller('todo')
@@ -11,7 +13,9 @@ export class TodoController {
     todos: Todo[];
 
     @Get()
-    getTodos(){
+    getTodos(
+        @Query() parameters: GetPaginatedTodoDto
+    ){
         return this.todos
     }
 
@@ -27,15 +31,19 @@ export class TodoController {
 
     @Post()
     addTodo(
-        @Body() newTodo: Todo,
+        @Body() newTodo: AddTodoDto,
         @Body('id') id: string, // get only one argument
     ){
+        const todo = new Todo();
+        const {name,description} = newTodo;
+        todo.name = name;
+        todo.description = description;
         if (this.todos.length){
-            newTodo.id = this.todos[this.todos.length - 1].id + 1;
+            todo.id = this.todos[this.todos.length - 1].id + 1;
         } else {
-            newTodo.id = 1;
+            todo.id = 1;
         }
-        this.todos.push(newTodo)
+        this.todos.push(todo)
         return newTodo
     }
 
@@ -63,7 +71,7 @@ export class TodoController {
     @Put(':id')
     updateTodo(
         @Param('id') id,
-        @Body() newTodo: Partial<Todo> // only a part of a todo
+        @Body() newTodo: Partial<AddTodoDto> // only a part of a todo
     ){
         const todo = this.getTodoById(id)
         todo.description = newTodo.description? newTodo.description : todo.description
