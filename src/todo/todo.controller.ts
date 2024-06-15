@@ -2,80 +2,50 @@ import { Body, Controller, Delete, Get, NotFoundException, Param, Post, Put, Que
 import { Todo } from './entities/todo.entity';
 import { GetPaginatedTodoDto } from './DTO/get-paginated-todo.dto';
 import { AddTodoDto } from './DTO/add-todo.dto';
+import { TodoService } from './todo.service';
 
 
 @Controller('todo')
 export class TodoController {
-    constructor(){
-        this.todos = []
-    }
+    constructor(
+        private todoService: TodoService
+    ){}
 
-    todos: Todo[];
+
 
     @Get()
     getTodos(
         @Query() parameters: GetPaginatedTodoDto
     ){
-        return this.todos
+        return this.todoService.getTodos()
     }
 
     @Get('/:id')
     getTodoById(
         @Param('id') id
     ){
-        const todo = this.todos.find((actualTodo) => actualTodo.id === +id);
-        if(todo)
-            return todo
-        throw new NotFoundException('Todo not found')
+        return this.todoService.getTodoById(+id);
     }
 
     @Post()
     addTodo(
         @Body() newTodo: AddTodoDto,
-        @Body('id') id: string, // get only one argument
     ){
-        const todo = new Todo();
-        const {name,description} = newTodo;
-        todo.name = name;
-        todo.description = description;
-        if (this.todos.length){
-            todo.id = this.todos[this.todos.length - 1].id + 1;
-        } else {
-            todo.id = 1;
-        }
-        this.todos.push(todo)
-        return newTodo
+        return this.todoService.addTodo(newTodo)
     }
 
-    @Delete(':id') // ':' : get a parameter
+    @Delete(':id') 
     deleteTodo(
         @Param('id') id
     ){
-        //Find todos inside todos array
-        // '===' type taken into consideration
-        // '+' transform str into int
-        const index = this.todos.findIndex((todo) => todo.id === +id);
-
-        //delete and return error if does not exist
-        if (index >= 0){
-            this.todos.splice(index, 1);
-        } else {
-            throw new NotFoundException(`Todo with id ${id} does not exist`)
-        }
-        return {
-            message : `Todo with id ${id} has been succesfully deleted`,
-            count: 1,
-        }
+        return this.todoService.deleteTodo(+id);
     }
 
     @Put(':id')
     updateTodo(
         @Param('id') id,
-        @Body() newTodo: Partial<AddTodoDto> // only a part of a todo
+        @Body() newTodo: Partial<AddTodoDto>
     ){
-        const todo = this.getTodoById(id)
-        todo.description = newTodo.description? newTodo.description : todo.description
-        todo.name = newTodo.name? newTodo.name : todo.name
-        return todo
+        return this.todoService.updateTodo(+id, newTodo)
     }
 }
