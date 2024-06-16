@@ -16,7 +16,7 @@ export class TodoController {
     @Get()
     getTodos(
         @Query() parameters: GetPaginatedTodoDto
-    ){
+    ): Todo[]{
         return this.todoService.getTodos()
     }
 
@@ -30,7 +30,7 @@ export class TodoController {
     @Post()
     addTodo(
         @Body() newTodo: AddTodoDto,
-    ){
+    ): Todo{
         return this.todoService.addTodo(newTodo)
     }
 
