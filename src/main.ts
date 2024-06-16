@@ -7,7 +7,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({
     transform: true,
     whitelist: true,
-    //forbidNonWhitelisted : white list + generate exception for security 
+    forbidNonWhitelisted : true,
   }));
   await app.listen(3000);
 }
