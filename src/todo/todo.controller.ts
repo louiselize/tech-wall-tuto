@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, NotFoundException, Param, ParseIntPipe, Post, Put, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, NotFoundException, Param, ParseIntPipe, Post, Put, Query } from '@nestjs/common';
 import { Todo } from './entities/todo.entity';
 import { GetPaginatedTodoDto } from './DTO/get-paginated-todo.dto';
 import { AddTodoDto } from './DTO/add-todo.dto';
@@ -36,7 +36,7 @@ export class TodoController {
 
     @Delete(':id') 
     deleteTodo(
-        @Param('id', ParseIntPipe) id
+        @Param('id', new ParseIntPipe({errorHttpStatusCode: HttpStatus.NOT_FOUND})) id
     ){
         return this.todoService.deleteTodo(id);
     }
