@@ -14,8 +14,6 @@ export class TodoController {
         private todoService: TodoService
     ){}
 
-
-
     @Get()
     getTodos(
         @Query() parameters: GetPaginatedTodoDto

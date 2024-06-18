@@ -3,9 +3,13 @@ import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import * as morgan from 'morgan';
 import { DurationInterceptor } from './interceptors/duration/duration.interceptor';
+import * as dotenv from 'dotenv';
+import { ConfigService } from '@nestjs/config';
 
+dotenv.config()
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  const configService = app.get(ConfigService)
   const corsOptions = {
     origin: ['http://localhost:4200']
   }
@@ -22,7 +26,7 @@ async function bootstrap() {
     whitelist: true,
     forbidNonWhitelisted : true,
   }));
-  app.useGlobalInterceptors(new DurationInterceptor()); // should be instantiated because app not ready yet
-  await app.listen(3000);
+  app.useGlobalInterceptors(new DurationInterceptor()); 
+  await app.listen(configService.get('APP_PORT'));
 }
 bootstrap();
