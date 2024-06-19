@@ -9,6 +9,7 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import * as dotenv from 'dotenv'
 import { Todo } from './todo/entities/todo.entity';
+import { CvModule } from './cv/cv.module';
 
 dotenv.config();
 
@@ -27,7 +28,8 @@ dotenv.config();
       database: process.env.DB_NAME,
       entities: ["dist/**/*.entity{.ts,.js}"],
       synchronize: true, // /!\ mode dev ONLY : all modifications in ORM will be synchronized with DB
-    })
+    }),
+    CvModule
   ],
   controllers: [AppController],
   providers: [AppService],
