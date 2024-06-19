@@ -1,17 +1,18 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { TimestampEntities } from "src/Generics/timestamp.entities";
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn, Timestamp, UpdateDateColumn } from "typeorm";
 
-@Entity('cv') //DB table name is CV
-export class CvEntity {
+@Entity('cv') 
+export class CvEntity extends TimestampEntities{
     @PrimaryGeneratedColumn()
     id: number;
     
     @Column({
-        update:false //once data is created, can't be modified
+        update:false 
     })
     name: string;
 
     @Column()
-    firstname: number;
+    firstname: string;
 
     @Column()
     age: number;
@@ -23,9 +24,9 @@ export class CvEntity {
     job: string;
 
     @Column({
-        name:'url', // 'path' is called 'url' in DB
+        name:'url', 
         length:'100',
-        //enum..
     })
     path: string;
+
 }
