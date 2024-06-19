@@ -6,6 +6,11 @@ import { FirstMiddleware } from './middlewares/first/first.middleware';
 import { logger } from './middlewares/Logger.middleware';
 import { HelmetMiddleware } from '@nest-middlewares/helmet';
 import { ConfigModule } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import * as dotenv from 'dotenv'
+import { Todo } from './todo/entities/todo.entity';
+
+dotenv.config();
 
 @Module({
   imports: [
@@ -13,6 +18,16 @@ import { ConfigModule } from '@nestjs/config';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+    TypeOrmModule.forRoot({
+      type: 'mysql',
+      host: process.env.DB_HOST,
+      port:parseInt(process.env.DB_PORT),
+      username: process.env.DB_USERNAME,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_NAME,
+      entities: ["dist/**/*.entity{.ts,.js}"],
+      synchronize: true, // /!\ mode dev ONLY : all modifications in ORM will be synchronized with DB
+    })
   ],
   controllers: [AppController],
   providers: [AppService],
@@ -26,7 +41,7 @@ export class AppModule implements NestModule{
         method: RequestMethod.GET
       },
       {
-        path: 'todo*',  //regular expression : all routes that start with 'todo'
+        path: 'todo*',
         method: RequestMethod.DELETE
       }
     )
