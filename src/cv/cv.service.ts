@@ -23,13 +23,10 @@ export class CvService {
     }
 
     async updateCv(id: number, cv: UpdateCvDto): Promise<CvEntity> {
-        //Get cv with id selected
-        //Replace old values with new one
         const newCv = await this.cvRepository.preload({
             id,
             ...cv
         })
-        // test if not cv
         if (! newCv){
             throw new NotFoundException(`Cv ${id} does not exist`)
         }
@@ -37,6 +34,20 @@ export class CvService {
     }
 
     async updateCvWithCriteria(updateCriteria, cv: UpdateCvDto) {
-        this.cvRepository.update(updateCriteria,cv)
+        return this.cvRepository.update(updateCriteria,cv)
+    }
+
+    async removeCv(id: number) {
+        const cvToRemove = await this.cvRepository.findOneBy({
+            id:id
+        });
+        if(! cvToRemove){
+            throw new NotFoundException(`Cv ${id} does not exist`)
+        }
+        return this.cvRepository.remove(cvToRemove)
+    }
+
+    async deleteCv(id: number) {
+        return this.cvRepository.delete(id)
     }
 }
