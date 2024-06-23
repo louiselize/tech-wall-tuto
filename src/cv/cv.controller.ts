@@ -40,11 +40,17 @@ export class CvController {
     }
 
     @Delete(':id')
-    async removeCv(
+    async deleteCv(
         @Param('id', ParseIntPipe) id : number,
     ) {
-        // return await this.cvService.removeCv(id);
-        return await this.cvService.deleteCv(id);
+        return await this.cvService.softDeleteCv(id);
 
+    }
+
+    @Get('recover/:id')
+    async restoreCv(        
+        @Param('id', ParseIntPipe) id : number,
+    ){
+        return await this.cvService.restoreCv(id);
     }
 }
