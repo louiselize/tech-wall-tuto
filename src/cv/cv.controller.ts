@@ -1,8 +1,9 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, ParseIntPipe, Patch, Post } from '@nestjs/common';
 import { CvService } from './cv.service';
 import { CvEntity } from './entities/cv.entity/cv.entity';
 import { AddCvDto } from './dto/Add-cv.dto';
 import { AddTodoDto } from 'src/todo/DTO/add-todo.dto';
+import { UpdateCvDto } from './dto/Update-cv.dto';
 
 @Controller('cv')
 export class CvController {
@@ -17,8 +18,24 @@ export class CvController {
 
     @Post()
     async addCv(
-        @Body() AddCvDto: AddCvDto
+        @Body() addCvDto: AddCvDto
     ) : Promise<CvEntity>{
-        return await this.cvService.addCv(AddCvDto)
+        return await this.cvService.addCv(addCvDto)
+    }
+
+    @Patch(':id')
+    async updateCv(
+        @Body() updateCvDto: UpdateCvDto,
+        @Param('id', ParseIntPipe) id : number,
+    ) : Promise<CvEntity>{
+        return await this.cvService.updateCv(id,updateCvDto);
+    }
+
+    @Patch()
+    async updateCvWithCriteria(
+        @Body() updateObject,
+    ) {
+        const {updateCriteria, updateCvDto} = updateObject
+        return await this.cvService.updateCvWithCriteria(updateCriteria,updateCvDto);
     }
 }
