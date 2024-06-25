@@ -16,6 +16,8 @@ export class CvController {
         return await this.cvService.getCvs()
     }
 
+    
+
     @Post()
     async addCv(
         @Body() addCvDto: AddCvDto
@@ -53,4 +55,19 @@ export class CvController {
     ){
         return await this.cvService.restoreCv(id);
     }
+
+    @Get('stats')
+    async statsCvNumberByAge(){
+        return await this.cvService.statCvCountByAge(50,16);
+    }
+
+    @Get(':id')
+    async getCvById(
+        @Param('id', ParseIntPipe) id : number,
+
+    ): Promise<CvEntity> {
+        return await this.cvService.findCvById(id);
+    }
+    
+    // caution with order, place generic path at the end
 }
